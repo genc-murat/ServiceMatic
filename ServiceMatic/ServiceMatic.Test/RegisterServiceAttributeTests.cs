@@ -26,6 +26,6 @@ public class RegisterServiceAttributeTests
         // Assert
         attributes.Should().NotBeNullOrEmpty();
         attributes[0].Should().BeOfType<RegisterServiceAttribute>();
-        ((RegisterServiceAttribute)attributes[0]).Lifetime.Should().Be(ServiceLifetime.Singleton);
+        ((RegisterServiceAttribute)attributes[0]).Lifetime.Should().Be(ServiceLifetime.Transient);
     }
 }
