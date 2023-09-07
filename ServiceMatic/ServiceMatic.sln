@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceMatic", "ServiceMati
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceMatic.Test", "ServiceMatic.Test\ServiceMatic.Test.csproj", "{2881E391-6C13-4A91-839B-B0010A29022E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F34D5B74-2578-4E3A-A2CE-1297A7E3BAB0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{BAC8A5CF-8DB7-4601-880D-D0591C50CE4B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +28,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{41F8F73E-A3E9-44A7-A345-CEDD4286DC56} = {F34D5B74-2578-4E3A-A2CE-1297A7E3BAB0}
+		{2881E391-6C13-4A91-839B-B0010A29022E} = {BAC8A5CF-8DB7-4601-880D-D0591C50CE4B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF38075C-7579-44A4-9262-D0629D3C71A2}

@@ -25,16 +25,13 @@ public static class ServiceMaticExtensions
     /// This method dynamically registers services by scanning an assembly. It supports multiple configuration options, 
     /// including type filtering, interface filtering, and dependency graph updating.
     /// </remarks>
-    public static IServiceCollection AddServicesFromAssembly(this IServiceCollection services,Assembly assembly,Func<Type, bool>? filter = null,
+    public static IServiceCollection AddServicesFromAssembly(this IServiceCollection services, Assembly assembly, Func<Type, bool>? filter = null,
 ServiceLifetime lifetime = ServiceLifetime.Transient,
 DependencyGraph? dependencyGraph = null,
 bool registerIfNoInterface = false,
 Func<Type, Type, bool>? interfaceFilter = null)
     {
-        if (assembly == null)
-        {
-            throw new ArgumentNullException(nameof(assembly));
-        }
+        ArgumentNullException.ThrowIfNull(assembly, nameof(assembly));
 
         var typesFromAssembly = new HashSet<Type>(
             assembly.GetTypes()
@@ -82,8 +79,7 @@ Func<Type, Type, bool>? interfaceFilter = null)
     /// This method dynamically registers services by scanning an assembly for types annotated with a custom attribute.
     /// It also supports optional interface filtering and dependency graph tracking.
     /// </remarks>
-    public static IServiceCollection AddServicesWithAttribute(
-     this IServiceCollection services,
+    public static IServiceCollection AddServicesWithAttribute(this IServiceCollection services,
      Assembly assembly,
      ServiceLifetime defaultLifetime = ServiceLifetime.Transient,
      DependencyGraph? dependencyGraph = null,
@@ -137,10 +133,7 @@ Func<Type, Type, bool>? interfaceFilter = null)
  Func<IServiceProvider, TInterface, TInterface> decoratorFactory)
  where TInterface : class
     {
-        if (decoratorFactory == null)
-        {
-            throw new ArgumentNullException(nameof(decoratorFactory), "The decorator factory should not be null.");
-        }
+        ArgumentNullException.ThrowIfNull(decoratorFactory, nameof(decoratorFactory));
 
         var wrappedDescriptors = services.Where(s => s.ServiceType == typeof(TInterface)).ToList();
 
@@ -222,8 +215,7 @@ Func<Type, Type, bool>? interfaceFilter = null)
     /// It checks to ensure that each implementation type is assignable from its service type. 
     /// If the addition of any service fails, an exception is thrown.
     /// </remarks>
-    public static IServiceCollection AddBatchServices(
-this IServiceCollection services,
+    public static IServiceCollection AddBatchServices(this IServiceCollection services,
 List<(Type serviceType, Type implementationType, ServiceLifetime lifetime)> batch)
     {
         foreach (var (serviceType, implementationType, lifetime) in batch)
@@ -381,11 +373,7 @@ List<(Type serviceType, Type implementationType, ServiceLifetime lifetime)> batc
     /// </remarks>
     private static bool IsRegistered(Type type, IServiceCollection services)
     {
-        // Null check for services
-        if (services == null)
-        {
-            throw new ArgumentNullException(nameof(services), "The IServiceCollection should not be null.");
-        }
+        ArgumentNullException.ThrowIfNull(services, nameof(services));
 
         if (IsTypeRegisteredCache.TryGetValue(type, out bool isRegistered))
         {
@@ -397,7 +385,6 @@ List<(Type serviceType, Type implementationType, ServiceLifetime lifetime)> batc
             serviceDescriptor.ImplementationType == type ||
             (serviceDescriptor.ImplementationInstance != null && serviceDescriptor.ImplementationInstance.GetType() == type));
 
-        // AddOrUpdate to ensure thread-safety
         IsTypeRegisteredCache.AddOrUpdate(type, isRegistered, (key, oldValue) => isRegistered);
 
         return isRegistered;
@@ -414,26 +401,16 @@ List<(Type serviceType, Type implementationType, ServiceLifetime lifetime)> batc
     /// The method evaluates the predicate on each registered service in the IServiceCollection.
     /// Services that satisfy the predicate are removed.
     /// </remarks>
-    public static IServiceCollection RemoveServices(
-       this IServiceCollection services,
-       Func<ServiceDescriptor, bool> predicate)
+    public static IServiceCollection RemoveServices(this IServiceCollection services, Func<ServiceDescriptor, bool> predicate)
     {
-        if (predicate == null)
+        ArgumentNullException.ThrowIfNull(predicate, nameof(predicate));
+
+        for (int i = services.Count - 1; i >= 0; i--)
         {
-            throw new ArgumentNullException(nameof(predicate), "The predicate should not be null.");
-        }
-
-        var servicesToRemove = services.Where(predicate).ToList();
-
-        if (!servicesToRemove.Any())
-        {
-            return services;
-        }
-
-
-        foreach (var service in servicesToRemove)
-        {
-            services.Remove(service);
+            if (predicate(services[i]))
+            {
+                services.RemoveAt(i);
+            }
         }
 
         return services;
@@ -459,7 +436,6 @@ List<(Type serviceType, Type implementationType, ServiceLifetime lifetime)> batc
 
         var node = graph.AddService(type);
 
-        // Assuming AddService is idempotent or handles duplicates gracefully
         if (node == null)
         {
             // Handle or log error
@@ -468,7 +444,6 @@ List<(Type serviceType, Type implementationType, ServiceLifetime lifetime)> batc
 
         var constructors = type.GetConstructors();
 
-        // Let's say we only want to deal with the constructor with the most parameters.
         var largestConstructor = constructors.OrderByDescending(c => c.GetParameters().Length).FirstOrDefault();
 
         if (largestConstructor != null)
@@ -502,10 +477,7 @@ List<(Type serviceType, Type implementationType, ServiceLifetime lifetime)> batc
     /// </remarks>
     /// <exception cref="FileNotFoundException">Thrown when the configuration file is not found.</exception>
     /// <exception cref="InvalidOperationException">Thrown when there are invalid or missing configurations.</exception>
-    public static async Task<IServiceCollection> AddServicesFromConfigurationAsync(
-  this IServiceCollection services,
-  string configurationPath,
-  DependencyGraph graph)
+    public static async Task<IServiceCollection> AddServicesFromConfigurationAsync(this IServiceCollection services, string configurationPath, DependencyGraph graph)
     {
         if (!File.Exists(configurationPath))
         {
