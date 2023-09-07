@@ -25,10 +25,7 @@ public static class ServiceMaticExtensions
     /// This method dynamically registers services by scanning an assembly. It supports multiple configuration options, 
     /// including type filtering, interface filtering, and dependency graph updating.
     /// </remarks>
-    public static IServiceCollection AddServicesFromAssembly(
-this IServiceCollection services,
-Assembly assembly,
-Func<Type, bool>? filter = null,
+    public static IServiceCollection AddServicesFromAssembly(this IServiceCollection services,Assembly assembly,Func<Type, bool>? filter = null,
 ServiceLifetime lifetime = ServiceLifetime.Transient,
 DependencyGraph? dependencyGraph = null,
 bool registerIfNoInterface = false,

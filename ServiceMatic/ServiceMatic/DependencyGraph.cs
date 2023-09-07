@@ -20,6 +20,8 @@ public class DependencyGraph
     /// <returns>The dependency node representing the added service.</returns>
     public DependencyNode AddService(Type serviceType)
     {
+        ArgumentNullException.ThrowIfNull(serviceType);
+
         if (!Nodes.ContainsKey(serviceType))
         {
             Nodes[serviceType] = new DependencyNode(serviceType);
