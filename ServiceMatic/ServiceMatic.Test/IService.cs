@@ -1,6 +1,5 @@
-﻿namespace ServiceMatic.Test
+﻿namespace ServiceMatic.Test;
+
+public interface IService
 {
-    public interface IService
-    {
-    }
 }

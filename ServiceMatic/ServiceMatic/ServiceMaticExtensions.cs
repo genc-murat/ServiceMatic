@@ -35,12 +35,14 @@ Func<Type, Type, bool>? interfaceFilter = null)
 
         var typesFromAssembly = new HashSet<Type>(
             assembly.GetTypes()
-            .Where(type => !type.IsAbstract && !type.IsInterface)
+            .Where(type => !type.IsAbstract && !type.IsInterface && (type.Namespace == null || !type.Namespace.StartsWith("System")))
             .Where(filter ?? (type => true)));
 
         foreach (var type in typesFromAssembly)
         {
-            var interfaceTypes = type.GetInterfaces().Where(i => interfaceFilter == null || interfaceFilter(type, i));
+            var interfaceTypes = type.GetInterfaces()
+                                     .Where(i => (i.Namespace == null || !i.Namespace.StartsWith("System")) &&
+                                                 (interfaceFilter == null || interfaceFilter(type, i)));
 
             if (!interfaceTypes.Any() && registerIfNoInterface)
             {
@@ -64,6 +66,7 @@ Func<Type, Type, bool>? interfaceFilter = null)
         }
 
         return services;
+
     }
 
     /// <summary>

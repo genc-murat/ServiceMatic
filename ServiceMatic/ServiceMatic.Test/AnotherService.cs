@@ -1,6 +1,5 @@
-﻿namespace ServiceMatic.Test
+﻿namespace ServiceMatic.Test;
+
+public class AnotherService : IAnotherService
 {
-    public class AnotherService : IAnotherService
-    {
-    }
 }

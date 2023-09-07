@@ -1,6 +1,5 @@
-﻿namespace ServiceMatic.Test
+﻿namespace ServiceMatic.Test;
+
+public interface IAnotherService
 {
-    public interface IAnotherService
-    {
-    }
 }
