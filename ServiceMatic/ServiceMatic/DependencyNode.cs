@@ -36,6 +36,8 @@ public class DependencyNode
     /// <param name="node">The node to add as a dependency.</param>
     public void AddDependency(DependencyNode node)
     {
+        ArgumentNullException.ThrowIfNull(node);
+
         Dependencies.Add(node);
     }
 }
